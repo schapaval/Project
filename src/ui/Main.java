@@ -10,27 +10,31 @@ public class Main{
 	private Scanner reader;
 	private Controller controller;
 	private Project project;
+	
 
 	public Main() {
 
 		reader = new Scanner(System.in);
 		controller = new Controller();
-		project = new Project();
+		
 	}
 
 	public static void main(String[] args) {
-
+		int option;
 		Main exe = new Main();
 		exe.menu();
 
+
 	}
 
-	// Incomplete
+	
 	public void menu() {
-
+		System.out.println("Options:");
+		System.out.println("1. Register project");
+		System.out.println("2. Search project with deadline");
 	}
 
-	//Incomplete
+	
 	public void RegisterProject() {
 		String name;
 		String clientName;
@@ -56,7 +60,10 @@ public class Main{
 
 		System.out.println("How long until the project starts? (Months)");
 		months = reader.nextInt();
-		initialDate = calculateInitialDate(months);
+		initialDate = project.calculateInitialDate(months);
+
+		System.out.println("How long until the project ends? (Months)");
+		finalDate = project.calculateFinalDate(months);
 		
 	}
 
@@ -69,6 +76,74 @@ public class Main{
 	public void searchProjectsBeforeDate() {
 
 	}
+
+	public void executeOption(int option){
+		int exit = 0;
+		do{
+			switch(option){
+				case 1:
+					RegisterProject();
+					exit = -1;
+				break;
+					
+				case 2: 
+					
+					searchOptionSelection();
+					exit = -1;
+				break;
+	
+				default:
+	
+				System.out.println("Invalid selection, try again");
+	
+				break;
+			}
+		}while(exit != -1);
+
+	
+		
+	}
+
+	public void searchOptionSelection(){
+		int exit = 0;
+		int option = 0;
+		do{
+			option = reader.nextInt();
+			switch(option){
+
+				case 1:
+				searchProjectsBeforeDate();
+				exit = -1;
+				break;
+	
+				case 2:
+				searchProjectsAfterDate();
+				exit = -1;
+				break;
+
+				default:
+
+				System.out.println("Invalid selection, try again");
+
+				break;
+	
+			}
+		}while(exit != -1);
+		
+	}
+
+	public int validateIntegerInput(){
+        int option = 0; 
+        if(reader.hasNextInt()){
+            option = reader.nextInt(); 
+        }
+        else{
+            reader.nextLine();
+            option = -1; 
+            System.out.println("Please enter an int value"); 
+        }
+        return option; 
+    }
 
 	public String validateTypeInput(String typeInput){
 		String projectType = "";

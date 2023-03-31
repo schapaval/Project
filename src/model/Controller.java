@@ -3,6 +3,7 @@ package model;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+
 public class Controller {
 
 	private Project[] projects;
@@ -16,6 +17,7 @@ public class Controller {
 	//Incomplete
 	public boolean RegisterProject() {
 
+		Project project = new Project();
 		return false;
 	}
 

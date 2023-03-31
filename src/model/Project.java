@@ -3,7 +3,6 @@ package model;
 import java.util.Calendar;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import java.text.ParseException;
 
 
@@ -16,10 +15,6 @@ public class Project{
 	private double budget;
 
 	private DateFormat formatter;
-
-	public Project(){
-		
-	}
 
 	public Project(String name, String clientName, Calendar initialDate, Calendar finalDate, double budget){
 		
