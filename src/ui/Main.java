@@ -58,8 +58,7 @@ public class Main{
 		clientName = reader.next();
 
 		System.out.println("Enter the project's type (Development, Maintenance or Deployment)");
-		typeInput = reader.next();
-		projectType = validateTypeInput(typeInput);
+		projectType = validateTypeInput();
 
 		System.out.println("Enter the project's budget");
 		projectBudget = reader.nextDouble();
@@ -174,10 +173,12 @@ public class Main{
         return option; 
     }
 
-	public String validateTypeInput(String typeInput){
+	public String validateTypeInput(){
 		String projectType = "";
 		int whileExit = 0;
 		do{
+			String typeInput = reader.next();
+			
 			if(typeInput.equalsIgnoreCase("Development")){
 				projectType = typeInput;
 				whileExit = -1;

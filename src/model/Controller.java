@@ -66,7 +66,7 @@ public class Controller {
 
 		Calendar deadline = Calendar.getInstance();
 		deadline.add(Calendar.MONTH, months);
-		for(int i = 0; i < 10; i++){
+		for(int i = 0; i < projects.length-1; i++){
 			flag = projects[i].getFinalDate().compareTo(deadline);
 			if(flag<0){
 				beforeProjects[i] = projects[i];

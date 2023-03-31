@@ -54,10 +54,6 @@ public class Project{
 		return budget;
 	}
 
-	public String getProjectInfo() throws ParseException{
-		return "\nName: " + name + "\nClient: " + clientName + "\nInitial Date: " + getInitialDateFormated() + 
-		"\nFinal Date: " + getFinalDateFormated() + "\nTotalBudget: " + budget + ".\n";
-	}
 
 	public Calendar calculateInitialDate(int months){
 		Calendar initialDate = Calendar.getInstance();
