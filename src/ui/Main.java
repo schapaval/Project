@@ -20,10 +20,15 @@ public class Main{
 	}
 
 	public static void main(String[] args) {
-		int option;
 		Main exe = new Main();
-		exe.menu();
+		
+		int option = 0;
 
+		do{
+			exe.menu();
+			option = exe.validateIntegerInput();
+			exe.executeOption(option);
+		}while(option != 3);
 
 	}
 
@@ -32,10 +37,11 @@ public class Main{
 		System.out.println("Options:");
 		System.out.println("1. Register project");
 		System.out.println("2. Search project with deadline");
+		System.out.println("3. Exit");
 	}
 
 	
-	public void RegisterProject() {
+	public void registerProject() {
 		String name;
 		String clientName;
 		Calendar initialDate;
@@ -60,21 +66,31 @@ public class Main{
 
 		System.out.println("How long until the project starts? (Months)");
 		months = reader.nextInt();
-		initialDate = project.calculateInitialDate(months);
+		initialDate = calculateInitialDate(months);
 
 		System.out.println("How long until the project ends? (Months)");
-		finalDate = project.calculateFinalDate(months);
+		months = reader.nextInt();
+		finalDate = calculateFinalDate(months);
 		
+		controller.registerProject(name, clientName, initialDate, finalDate, projectBudget);
 	}
 
 	//Incomplete
-	public void searchProjectsAfterDate() {
+	public int searchProjectsAfterDate() {
+		System.out.println("How long until the deadline? (Months)");
+		int months = reader.nextInt();
+		int projectCounter = controller.searchProjectsAfterDate(months);
 
+		return projectCounter;
 	}
 	
 	//Incomplete
-	public void searchProjectsBeforeDate() {
-
+	public int searchProjectsBeforeDate() {
+		System.out.println("How long until the deadline? (Months)");
+		int months = reader.nextInt();
+		int projectCounter = controller.searchProjectsBeforeDate(months);
+		
+		return projectCounter;
 	}
 
 	public void executeOption(int option){
@@ -82,15 +98,18 @@ public class Main{
 		do{
 			switch(option){
 				case 1:
-					RegisterProject();
+					registerProject();
 					exit = -1;
 				break;
 					
 				case 2: 
-					
 					searchOptionSelection();
 					exit = -1;
 				break;
+
+				case 3:
+
+					exit = -1;
 	
 				default:
 	
@@ -99,15 +118,21 @@ public class Main{
 				break;
 			}
 		}while(exit != -1);
+	}
 
 	
 		
-	}
+	
 
 	public void searchOptionSelection(){
 		int exit = 0;
 		int option = 0;
 		do{
+
+			System.out.println("Search options:");
+			System.out.println("1. Search projects before date");
+			System.out.println("2. Search projects after date");
+			System.out.println("Exit");
 			option = reader.nextInt();
 			switch(option){
 
@@ -120,6 +145,10 @@ public class Main{
 				searchProjectsAfterDate();
 				exit = -1;
 				break;
+
+				case 3: 
+
+				exit = -1;
 
 				default:
 
@@ -171,4 +200,38 @@ public class Main{
 		
 		return projectType;
 	}
+
+	public void showBeforeProjects(){
+		int projectCounter = searchProjectsBeforeDate();
+
+		for(int i = 0; i < projectCounter; i++){
+			String name = controller.getBeforeProjectsName(i);
+			System.out.println(name);
+		}
+	}
+
+	public void showAfterProjects(){
+		int projectCounter = searchProjectsAfterDate();
+
+		for(int i = 0; i < projectCounter; i++){
+			String name = controller.getAfterProjectsName(i);
+			System.out.println(name);
+		}
+	}
+
+	public Calendar calculateInitialDate(int months){
+		Calendar initialDate = Calendar.getInstance();
+
+		initialDate.add(Calendar.MONTH, months);
+		return initialDate; 
+
+	}
+
+	public Calendar calculateFinalDate(int months){
+		Calendar finalDate = Calendar.getInstance();
+
+		finalDate.add(Calendar.MONTH, months);
+		return finalDate;
+	}
+
 }

@@ -19,7 +19,6 @@ public class Project{
 	public Project(String name, String clientName, Calendar initialDate, Calendar finalDate, double budget){
 		
 		this.formatter = new SimpleDateFormat("dd/M/yy");
-
 		this.name = name;	
 		this.clientName = clientName;
 		this.initialDate = initialDate;
