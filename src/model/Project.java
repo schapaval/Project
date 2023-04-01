@@ -13,10 +13,10 @@ public class Project{
 	private Calendar initialDate;
 	private Calendar finalDate;
 	private double budget;
-
+	private String projectType;
 	private DateFormat formatter;
 
-	public Project(String name, String clientName, Calendar initialDate, Calendar finalDate, double budget){
+	public Project(String name, String clientName, Calendar initialDate, Calendar finalDate, double budget, String projectType){
 		
 		this.formatter = new SimpleDateFormat("dd/M/yy");
 		this.name = name;	
@@ -24,6 +24,7 @@ public class Project{
 		this.initialDate = initialDate;
 		this.finalDate = finalDate;
 		this.budget = budget;
+		this.projectType = projectType;
 	}
 
 	public String getName(){
@@ -54,20 +55,13 @@ public class Project{
 		return budget;
 	}
 
-
-	public Calendar calculateInitialDate(int months){
-		Calendar initialDate = Calendar.getInstance();
-
-		initialDate.add(Calendar.MONTH, months);
-		return initialDate; 
-
+	public String getProjectType(){
+		return projectType;
 	}
 
-	public Calendar calculateFinalDate(int months){
-		Calendar finalDate = Calendar.getInstance();
-
-		finalDate.add(Calendar.MONTH, months);
-		return finalDate;
+	public String getProjectInfo() throws ParseException{
+		return "\nName: " + name + "\nClient: " + clientName + "\nInitial Date: " + getInitialDateFormated() + 
+		"\nFinal Date: " + getFinalDateFormated() + "\nTotalBudget: " + budget + ".\n";
 	}
 }
 

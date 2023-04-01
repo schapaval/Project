@@ -3,13 +3,14 @@ package ui;
 import java.util.Scanner;
 import model.Controller;
 import java.util.Calendar;
-import model.Project;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class Main{
 
 	private Scanner reader;
 	private Controller controller;
-	private Project project;
+	private SimpleDateFormat formatting = new SimpleDateFormat("dd-MM-yyyy");
 	
 
 	public Main() {
@@ -23,12 +24,37 @@ public class Main{
 		Main exe = new Main();
 		
 		int option = 0;
+	
+		exe.menu();
+			do{
+				option = exe.validateIntegerInput();
+				
+			}while(option != 3 && option != 1 && option != 2 && option != 4 );
+	
+	do{
+		switch(option){
+			case 1:
+				exe.registerProject();
+			
+			break;
 
-		do{
-			exe.menu();
-			option = exe.validateIntegerInput();
-			exe.executeOption(option);
-		}while(option != 3);
+			case 2:
+				exe.searchProjectsBeforeDate();
+
+			break;
+
+			case 3:
+				exe.searchProjectsAfterDate();
+
+			break;
+
+			case 4: 
+				System.out.println("Program ended");
+			break;
+			}
+
+	}while(option != 4);
+		
 
 	}
 
@@ -36,20 +62,22 @@ public class Main{
 	public void menu() {
 		System.out.println("Options:");
 		System.out.println("1. Register project");
-		System.out.println("2. Search project with deadline");
-		System.out.println("3. Exit");
+		System.out.println("2. Search projects ending before deadline");
+		System.out.println("3. Search projects ending after deadline");
+		System.out.println("4. Exit");
 	}
 
 	
 	public void registerProject() {
-		String name;
-		String clientName;
-		Calendar initialDate;
-		Calendar finalDate;
-		String projectType;
-		double projectBudget;
-		int months;
-		String typeInput;
+		String name = "";
+		String clientName = "";
+		String date = "";
+		Calendar initialDate = Calendar.getInstance();
+		Calendar finalDate = Calendar.getInstance();
+		String projectType = "";
+		double projectBudget = 0;
+		int type = 0;
+		
 
 		System.out.println("Enter the name of the project");
 		name = reader.next();
@@ -57,182 +85,85 @@ public class Main{
 		System.out.println("Enter the name of the client");
 		clientName = reader.next();
 
-		System.out.println("Enter the project's type (Development, Maintenance or Deployment)");
-		projectType = validateTypeInput();
+		System.out.println("Select the project's type (1. Development, 2. Maintenance or 3. Deployment)");
+		type = validateIntegerInput();
+
+		switch(type){
+			case 1:
+			projectType = "Development";
+
+			break;
+
+			case 2: 
+			projectType = "Maintenance";
+			break;
+
+			case 3: 
+
+			projectType = "Deployment";
+
+			break;
+		}
+
+		System.out.println("Enter the initial date of the project: ");
+		initialDate = setDate();
+
+		System.out.println("Enter the final date of the project: ");
+		finalDate = setDate();
 
 		System.out.println("Enter the project's budget");
 		projectBudget = reader.nextDouble();
 
-		System.out.println("How long until the project starts? (Months)");
-		months = reader.nextInt();
-		initialDate = calculateInitialDate(months);
-
-		System.out.println("How long until the project ends? (Months)");
-		months = reader.nextInt();
-		finalDate = calculateFinalDate(months);
 		
-		controller.registerProject(name, clientName, initialDate, finalDate, projectBudget);
+		System.out.println(controller.registerProject(name, clientName, initialDate, finalDate, projectBudget, projectType));
 	}
 
-	//Incomplete
-	public int searchProjectsAfterDate() {
-		System.out.println("How long until the deadline? (Months)");
-		int months = reader.nextInt();
-		int projectCounter = controller.searchProjectsAfterDate(months);
-
-		return projectCounter;
+	
+	public void searchProjectsAfterDate() {
+		Calendar postDeadline = Calendar.getInstance();
+		System.out.println("Enter project deadline:");
+		postDeadline = setDate();
 	}
 	
-	//Incomplete
-	public int searchProjectsBeforeDate() {
-		System.out.println("How long until the deadline? (Months)");
-		int months = reader.nextInt();
-		int projectCounter = controller.searchProjectsBeforeDate(months);
+	
+	public void searchProjectsBeforeDate() {
+		Calendar preDeadline = Calendar.getInstance();
+		System.out.println("Enter project deadline:");
+		preDeadline = setDate();
+	}
+
+
+	private Calendar setDate(){
+		Calendar aDate = Calendar.getInstance();
+		boolean validate;
+		System.out.println("Enter date in following format: dd-MM-yyyy");
 		
-		return projectCounter;
-	}
-
-	public void executeOption(int option){
-		int exit = 0;
-		do{
-			switch(option){
-				case 1:
-					registerProject();
-					exit = -1;
-				break;
-					
-				case 2: 
-					searchOptionSelection();
-					exit = -1;
-				break;
-
-				case 3:
-
-					exit = -1;
-	
-				default:
-	
-				System.out.println("Invalid selection, try again");
-	
-				break;
+		do {
+			validate = false;
+			String dateIn = "";
+			System.out.print("Enter a date: ");
+			dateIn = reader.next();
+			try {
+				aDate.setTime(formatting.parse(dateIn));
+				validate = true;
+			} catch (ParseException e) {
+				//e.printStackTrace();
+				System.out.println("Try again");
 			}
-		}while(exit != -1);
+		} while (!validate);
+
+		return aDate;
 	}
-
-	
-		
-	
-
-	public void searchOptionSelection(){
-		int exit = 0;
-		int option = 0;
-		do{
-
-			System.out.println("Search options:");
-			System.out.println("1. Search projects before date");
-			System.out.println("2. Search projects after date");
-			System.out.println("Exit");
-			option = reader.nextInt();
-			switch(option){
-
-				case 1:
-				searchProjectsBeforeDate();
-				exit = -1;
-				break;
-	
-				case 2:
-				searchProjectsAfterDate();
-				exit = -1;
-				break;
-
-				case 3: 
-
-				exit = -1;
-
-				default:
-
-				System.out.println("Invalid selection, try again");
-
-				break;
-	
-			}
-		}while(exit != -1);
-		
-	}
-
 	public int validateIntegerInput(){
         int option = 0; 
         if(reader.hasNextInt()){
             option = reader.nextInt(); 
         }
         else{
-            reader.nextLine();
+            reader.nextLine();// limpiar el scanner 
             option = -1; 
-            System.out.println("Please enter an int value"); 
+            System.out.println("Ingrese un valor entero."); 
         }
         return option; 
     }
-
-	public String validateTypeInput(){
-		String projectType = "";
-		int whileExit = 0;
-		do{
-			String typeInput = reader.next();
-			
-			if(typeInput.equalsIgnoreCase("Development")){
-				projectType = typeInput;
-				whileExit = -1;
-			}
-	
-			else if(typeInput.equalsIgnoreCase("Maintenance")){
-				projectType = typeInput;
-				whileExit = -1;
-			}
-	
-			else if(typeInput.equalsIgnoreCase("Deployment")){
-				projectType = typeInput;
-				whileExit = -1;
-			}
-	
-			else{
-				System.out.println("Invalid type input!");
-			}
-		}while(whileExit != -1);
-		
-		return projectType;
-	}
-
-	public void showBeforeProjects(){
-		int projectCounter = searchProjectsBeforeDate();
-
-		for(int i = 0; i < projectCounter; i++){
-			String name = controller.getBeforeProjectsName(i);
-			System.out.println(name);
-		}
-	}
-
-	public void showAfterProjects(){
-		int projectCounter = searchProjectsAfterDate();
-
-		for(int i = 0; i < projectCounter; i++){
-			String name = controller.getAfterProjectsName(i);
-			System.out.println(name);
-		}
-	}
-
-	public Calendar calculateInitialDate(int months){
-		Calendar initialDate = Calendar.getInstance();
-
-		initialDate.add(Calendar.MONTH, months);
-		return initialDate; 
-
-	}
-
-	public Calendar calculateFinalDate(int months){
-		Calendar finalDate = Calendar.getInstance();
-
-		finalDate.add(Calendar.MONTH, months);
-		return finalDate;
-	}
-
 }

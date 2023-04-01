@@ -1,14 +1,13 @@
 package model;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+
 
 
 public class Controller {
 
 	private Project[] projects;
-	private Project[] beforeProjects;
-	private Project[] afterProjects;
+	private int projectCounter = 0;
 
 
 	public Controller() {
@@ -20,86 +19,47 @@ public class Controller {
 	}
 	
 	
-	public void registerProject(String name, String clientName, Calendar initialDate, Calendar finalDate, double budget) {
+	public String registerProject(String name, String clientName, Calendar initialDate, Calendar finalDate, double budget, String projectType) {
 
-		Project project = new Project(name, clientName, initialDate, finalDate, budget);
-		int pos = getFirstValidPosition();
+		String validated = "The list is already full!";
 
-		if(pos != -1){
-			projects[pos] = project;
-			for (int i = 0; i<projects.length; i++) {
-				
-			}
+		if(projectCounter < 10){
+			projects[projectCounter++] = new Project(name, clientName, initialDate, finalDate, budget, projectType);
+			validated = "Project registered successfully!";
 		}
-		
+
+		return validated;
 	}
 
-	//Incomplete
-	// Date class also has their own before() and after() method
-	public int searchProjectsAfterDate(int months) {
+	
+	public String searchProjectsAfterDate(Calendar postDeadline){
+		int controlVar = 1;
+		String msg = "List of projects after deadline:";
 
-		int flag = 0;
-		int projectCounter = 0;
-
-		Project afterProjects[] = new Project[10];
-
-		Calendar deadline = Calendar.getInstance();
-		deadline.add(Calendar.MONTH, months);
-
-		for(int i = 0; i < projects.length; i++){
-			flag = projects[i].getFinalDate().compareTo(deadline);
-
-			if(flag>0){
-				afterProjects[i] = projects[i];
-				projectCounter++;
+		for (int i = 0; i < projectCounter; i++) {
+			if(postDeadline.compareTo( projects[i].getInitialDate()  ) < 0){
+				msg+="\n"+(controlVar++)+"."+projects[i].getName();
 			}
 		}
-		return projectCounter;
 
+		msg = (msg.equalsIgnoreCase("Project list:"))?"The projects do not exist":msg;
+		return msg;
 	}
 	
 	
-	public int searchProjectsBeforeDate(int months) {
-		int flag = 0;
-		int projectCounter = 0;
-		Project beforeProjects[] = new Project[10];
+	public String searchProjectsBeforeDate(Calendar preDeadline) {
+		int controlVar = 1;
+		String msg = "List of projects before deadline:";
 
-		Calendar deadline = Calendar.getInstance();
-		deadline.add(Calendar.MONTH, months);
-		for(int i = 0; i < projects.length-1; i++){
-			flag = projects[i].getFinalDate().compareTo(deadline);
-			if(flag<0){
-				beforeProjects[i] = projects[i];
-				projectCounter++;
-			}
-			
-		}
-		return projectCounter;
-	}
-
-	public int getFirstValidPosition(){
-		int pos = -1; 
-
-		boolean foundIt = false; 
-		for(int i = 0; i < 10 && !foundIt; i++){
-			if(projects[i] == null){
-				pos = i; 
-				foundIt = true;
+		for (int i = 0; i < projectCounter; i++) {
+			if(preDeadline.compareTo( projects[i].getFinalDate()  ) > 0){
+				msg+="\n"+(controlVar++)+"."+projects[i].getName();
 			}
 		}
-		return pos; 
+
+		msg = (msg.equalsIgnoreCase("Project list:"))?"The projects do not exist":msg;
+		return msg;
 	}
 
-	public String getBeforeProjectsName(int pos){
-		String name = beforeProjects[pos].getName();
-
-		return name;
-	}
-	
-	public String getAfterProjectsName(int pos){
-		String name = afterProjects[pos].getName();
-
-		return name;
-	}
 
 }
